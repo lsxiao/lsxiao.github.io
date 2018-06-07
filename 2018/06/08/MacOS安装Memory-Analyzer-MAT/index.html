@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          MacOS安装Memory Analyzer (MAT) - Lishang的博客 | Lison Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://lsxiao.github.com/2018/06/08/MacOS安装Memory-Analyzer-MAT/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Lison</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">首页</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">关于</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">归档</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">标签</a>
+                        </li>
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://lsxiao.github.com/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>MacOS安装Memory Analyzer (MAT)</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Lishang Xiao on
+                        2018-06-08
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>最近的工作重心都侧重于性能和稳定性，特别是对于内存泄露、抖动、异常内存增多的排查。</p>
+<p>一般QA在测试时，发现内存异常，都是通过<code>adb shell am dumpheap &lt;pid&gt; &lt;output-file-name&gt;;</code>，会得到一个xx.hprof文件给到RD进行分析。此时Android Studio的hprof分析功能就有点拙荆见肘。</p>
+<p>所以需要祭出Memory Analyzer (下文简称MAT)这个大杀器。</p>
+<p>MAT在作为Eclipse插件的同时，也提供了单独的安装运行包供下载使用，对于MAT的来历和历史不做过多介绍，请自行google。</p>
+<p>这篇文章主要为了记录在MAC上安装MAT遇到的一些坑。</p>
+<h1 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h1><p>到 <code>https://www.eclipse.org/mat/downloads.php</code> 网页下载最新的版本</p>
+<img src="/2018/06/08/MacOS安装Memory-Analyzer-MAT/downloadurl.png">
+<p>解压后拖动到Applications即可。</p>
+<h1 id="指定Java版本"><a href="#指定Java版本" class="headerlink" title="指定Java版本"></a>指定Java版本</h1><p>安装完成后直接点击启动，结果报错。查看日志后发现，MAT使用的Java版本为1.6.0_65。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">!SESSION 2018-06-07 17:22:47.749 -----------------------------------------------</span><br><span class="line">eclipse.buildId=unknown</span><br><span class="line">java.version=1.6.0_65</span><br><span class="line">java.vendor=Apple Inc.</span><br><span class="line">BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=zh_CN</span><br><span class="line">Framework arguments:  -keyring /Users/boluo/.eclipse_keyring -showlocation</span><br><span class="line">Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/boluo/.eclipse_keyring -showlocation</span><br><span class="line"></span><br><span class="line">!ENTRY org.eclipse.birt.chart.device.extension 4 0 2018-06-07 17:22:48.398</span><br><span class="line">!MESSAGE FrameworkEvent ERROR</span><br><span class="line">!STACK 0</span><br><span class="line">org.osgi.framework.BundleException: Could not resolve module: org.eclipse.birt.chart.device.extension [24]</span><br><span class="line">  Unresolved requirement: Require-Bundle: org.eclipse.birt.chart.engine; bundle-version=&quot;[2.1.0,5.0.0)&quot;</span><br><span class="line">    -&gt; Bundle-SymbolicName: org.eclipse.birt.chart.engine; bundle-version=&quot;4.5.0.v201506092134&quot;; singleton:=&quot;true&quot;</span><br><span class="line">       org.eclipse.birt.chart.engine [26]</span><br><span class="line">         Unresolved requirement: Require-Bundle: org.eclipse.birt.core; bundle-version=&quot;[2.1.0,5.0.0)&quot;; visibility:=&quot;reexport&quot;</span><br><span class="line">           -&gt; Bundle-SymbolicName: org.eclipse.birt.core; bundle-version=&quot;4.5.0.v201506092134&quot;; singleton:=&quot;true&quot;</span><br><span class="line">              org.eclipse.birt.core [28]</span><br><span class="line">                Unresolved requirement: Require-Bundle: org.eclipse.core.runtime; bundle-version=&quot;[3.2.0,4.0.0)&quot;; visibility:=&quot;reexport&quot;</span><br><span class="line">                  -&gt; Bundle-SymbolicName: org.eclipse.core.runtime; bundle-version=&quot;3.11.1.v20150903-1804&quot;; singleton:=&quot;true&quot;</span><br><span class="line">                     org.eclipse.core.runtime [40]</span><br><span class="line">                       Unresolved requirement: Require-Bundle: org.eclipse.core.jobs; bundle-version=&quot;[3.2.0,4.0.0)&quot;; visibility:=&quot;reexport&quot;</span><br><span class="line">                         -&gt; Bundle-SymbolicName: org.eclipse.core.jobs; bundle-version=&quot;3.7.0.v20150330-2103&quot;; singleton:=&quot;true&quot;</span><br><span class="line">                            org.eclipse.core.jobs [37]</span><br><span class="line">                              Unresolved requirement: Require-Capability: osgi.ee; filter:=&quot;(&amp;(osgi.ee=JavaSE)</span><br><span class="line">                              version=1.7</span><br></pre></td></tr></table></figure></p>
+<p>但是官方文档指出MAT需要1.7 Java才可以运行，所以此时需要为MAT指定一个1.7的Java VM。只需要在MemoryAnalyzer.ini文件中<strong><em>最开始</em></strong>添加</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">vm</span></span><br><span class="line"><span class="ruby">&lt;你的Java1.<span class="number">7</span>路径&gt;</span></span><br></pre></td></tr></table></figure>
+<p>添加完成后如下:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-vm</span><br><span class="line">/Library/Java/JavaVirtualMachines/jdk1.<span class="number">7.0</span>_75.jdk/Contents/Home/bin</span><br><span class="line">-startup</span><br><span class="line">../Eclipse/plugins/org<span class="selector-class">.eclipse</span><span class="selector-class">.equinox</span><span class="selector-class">.launcher_1</span>.<span class="number">3.100</span><span class="selector-class">.v20150511-1540</span><span class="selector-class">.jar</span></span><br><span class="line">--launcher.library</span><br><span class="line">../Eclipse/plugins/org<span class="selector-class">.eclipse</span><span class="selector-class">.equinox</span><span class="selector-class">.launcher</span><span class="selector-class">.cocoa</span><span class="selector-class">.macosx</span><span class="selector-class">.x86_64_1</span>.<span class="number">1.300</span>.v20150602-<span class="number">1417</span></span><br><span class="line">-vmargs</span><br><span class="line">-Xmx1024m</span><br><span class="line">-Dorg<span class="selector-class">.eclipse</span><span class="selector-class">.swt</span><span class="selector-class">.internal</span><span class="selector-class">.carbon</span><span class="selector-class">.smallFonts</span></span><br><span class="line">-XstartOnFirstThread⏎</span><br></pre></td></tr></table></figure></p>
+<p>如果你和我一样不知道MemoryAnalyzer.ini在什么地方，可以使用find搜索一下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo find -name <span class="string">"MemoryAnalyzer.ini"</span></span><br></pre></td></tr></table></figure>
+<p>修改完成后保存退出，重新打开mat即可。<br><img src="/2018/06/08/MacOS安装Memory-Analyzer-MAT/mat.png"></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/04/25/通过usb接口ssh树莓派zero-w-wh/" data-toggle="tooltip" data-placement="top" title="通过usb接口ssh树莓派zero(w/wh)">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "lison";
+    var disqus_identifier = "http://lsxiao.github.com/2018/06/08/MacOS安装Memory-Analyzer-MAT/";
+    var disqus_url = "http://lsxiao.github.com/2018/06/08/MacOS安装Memory-Analyzer-MAT/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/lsxiao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lsxiao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Lison 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://lsxiao.github.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'xiaolishang.com';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http://lsxiao.github.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
